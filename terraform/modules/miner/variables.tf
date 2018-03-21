@@ -51,5 +51,5 @@ variable name {
 
 variable default_tags {
   description = "Default tags"
-  type = "map"
+  type        = "map"
 }

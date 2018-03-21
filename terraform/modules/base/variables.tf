@@ -4,5 +4,5 @@ variable env {
 
 variable default_tags {
   description = "Default tags"
-  type = "map"
+  type        = "map"
 }

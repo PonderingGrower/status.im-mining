@@ -31,9 +31,9 @@ resource "aws_instance" "miner" {
 }
 
 resource "aws_route53_record" "miner" {
- 	zone_id = "${var.zone_id}"
+  zone_id = "${var.zone_id}"
   count   = "${var.count}"
-  name    = "${local.host_prefix}-${format("%02d", count.index+1)}.${var.domain}",
+  name    = "${local.host_prefix}-${format("%02d", count.index+1)}.${var.domain}"
   type    = "A"
   ttl     = "300"
   records = ["${aws_instance.miner.public_ip}"]
@@ -49,6 +49,7 @@ resource "aws_security_group" "miner" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   ingress {
     from_port   = 0
     to_port     = 30303

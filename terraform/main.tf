@@ -30,17 +30,18 @@ module "miner" {
   domain           = "${var.domain}"
 }
 
-resource null_resource "ansible_miner" {
-	depends_on = [
-		"module.miner"
-	]
+#resource null_resource "ansible_miner" {
+#	depends_on = [
+#		"module.miner"
+#	]
+#
+#	provisioner "local-exec" {
+#		command = <<EOF
+#			cd ../ansible &&
+#			ansible-playbook site.yml \
+#				-e env=${var.env} \
+#        -e group_name=${var.miner_params["name"]}
+#    EOF
+#	}
+#}
 
-	provisioner "local-exec" {
-		command = <<EOF
-			cd ../ansible &&
-			ansible-playbook site.yml \
-				-e env=${var.env} \
-        -e group_name=${var.miner_params["name"]}
-    EOF
-	}
-}

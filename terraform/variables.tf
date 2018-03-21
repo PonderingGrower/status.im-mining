@@ -12,7 +12,7 @@ variable private_key_path {
 
 variable env {
   description = "Environment prefix"
-  default = "geth"
+  default     = "geth"
 }
 
 variable ssh_user {
@@ -31,6 +31,7 @@ variable region {
 
 variable miner_params {
   description = "Paramaters controlling miner instances"
+
   default = {
     "name"  = "miner"
     "count" = "1"
@@ -39,7 +40,8 @@ variable miner_params {
 
 /* This is purely for easier costs tracking */
 variable default_tags {
-	description = "Default tags to add to resources"
+  description = "Default tags to add to resources"
+
   default = {
     "purpose" = "status-im-task"
   }
