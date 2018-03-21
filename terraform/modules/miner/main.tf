@@ -1,3 +1,7 @@
+locales {
+  hostname = "${var.env}-${var.name}-${format("%02d", count.index+1)}"
+}
+
 resource "aws_instance" "miner" {
   ami           = "${var.ami}"
   count         = "${var.count}"
@@ -10,7 +14,7 @@ resource "aws_instance" "miner" {
   ]
 
   tags = "${merge(var.default_tags, map(
-    "Name",  "${var.env}-${var.name}-${format("%02d", count.index+1)}",
+    "Name",  "${locale.hostname}",
     "Group", "${var.env}-${var.name}-cluster"
   ))}"
 
@@ -24,6 +28,15 @@ resource "aws_instance" "miner" {
       private_key = "${file(var.private_key_path)}"
     }
   }
+}
+
+resource "aws_route53_record" "miner" {
+ 	zone_id = "${var.zone_id}"
+  count   = "${var.count}"
+  name    = "${locale.hostname}.${var.domain}",
+  type    = "A"
+  ttl     = "300"
+  records = ["${aws_instance.miner.public_ip}"]
 }
 
 resource "aws_security_group" "miner" {

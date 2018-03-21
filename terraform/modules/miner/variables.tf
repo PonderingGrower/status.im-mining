@@ -14,6 +14,14 @@ variable env {
   description = "Environment prefix"
 }
 
+variable zone_id {
+  description = "Zone ID of DNS domain to update"
+}
+
+variable domain {
+  description = "DNS domain to update"
+}
+
 variable ami {
   description = "Instance AMI"
 }

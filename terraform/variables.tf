@@ -20,6 +20,10 @@ variable ssh_user {
   default     = "ubuntu"
 }
 
+variable domain {
+  description = "DNS Domain to update"
+}
+
 variable region {
   description = "Region"
   default     = "eu-west-1"
