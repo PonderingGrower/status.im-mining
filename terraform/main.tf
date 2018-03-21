@@ -27,3 +27,22 @@ module "miner" {
   count            = "${var.miner_params["count"]}"
   default_tags     = "${var.default_tags}"
 }
+
+resource null_resource "ansible_miner" {
+  triggers {
+    key = "${uuid()}"
+  }
+
+  depends_on = [
+    "module.miner"
+  ]
+
+  provisioner "local-exec" {
+    command = <<EOF
+      cd ../ansible &&
+      ansible-playbook site.yml \
+        -e env=${var.env} \
+        -e group_name=${var.miner_params["name"]}
+    EOF
+  }
+}
