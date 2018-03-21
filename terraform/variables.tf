@@ -1,3 +1,5 @@
+/* REQUIRED -------------------------------------*/
+
 variable key_name {
   description = "Name of key used to access miner instances"
 }
@@ -14,6 +16,12 @@ variable etherbase {
   description = "Eth account for receiving mining rewards."
 }
 
+variable domain {
+  description = "DNS Domain to update"
+}
+
+/* OPTIONAL -------------------------------------*/
+
 variable env {
   description = "Environment prefix"
   default     = "geth"
@@ -22,10 +30,6 @@ variable env {
 variable ssh_user {
   description = "User used to log in to instance"
   default     = "ubuntu"
-}
-
-variable domain {
-  description = "DNS Domain to update"
 }
 
 variable region {
