@@ -31,7 +31,7 @@ miner_params {
 }
 ```
 
-Once that exists you can simple run `terraform plan` and then `terraform apply` if you like what you see.
+Once that exists you can simply go into the `terraform` directory and run `terraform plan` and then `terraform apply` if you like what you see.
 
 # Structure
 
