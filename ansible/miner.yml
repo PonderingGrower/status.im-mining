@@ -1,0 +1,23 @@
+---
+
+- hosts: aws_tag_Group=geth-miner-cluster
+  gather_facts: false
+  become: yes
+
+  pre_tasks:
+  - name: Install python for Ansible
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    changed_when: False
+
+  tasks:
+  - name: Add geth repo
+    apt_repository:
+        repo: 'ppa:ethereum/ethereum'
+        state: present
+        filename: 'ethereum'
+        update_cache: yes
+  - name: Install geth
+    apt:
+      name: ethereum
+      state: present
+
