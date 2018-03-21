@@ -13,11 +13,21 @@ resource "aws_instance" "miner" {
     "${aws_security_group.miner.id}",
   ]
 
+  root_block_device {
+    /* Estimated size based on stackexchange discission:
+     * https://ethereum.stackexchange.com/a/826
+     * Will probably have to be increased in the future. */
+    volume_size = "30"
+    volume_type = "gp2"
+    delete_on_termination = "true"
+  }
+
   tags = "${merge(var.default_tags, map(
     "Name",  "${local.host_prefix}-${format("%02d", count.index+1)}",
     "Group", "${local.host_prefix}-cluster"
   ))}"
 
+  /* This is just a connection check */
   provisioner "remote-exec" {
     inline = "#Connected!"
 
