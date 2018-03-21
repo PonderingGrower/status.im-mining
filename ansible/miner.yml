@@ -31,11 +31,6 @@
       msg: "Provide address for receiving mining rewards."
     when: etherbase is not defined
 
-  - name: Check existence of etherbase variable
-    debug:
-      msg: "Mining rewards will be sent to: {{ etherbase }}"
-    when: etherbase is defined
-
   - name: Create 'miner' user for geth process
     user:
       name: miner
@@ -58,4 +53,4 @@
   - name: Verify geth miner is running
     supervisorctl:
       name: geth-miner
-      state: restarted
+      state: started

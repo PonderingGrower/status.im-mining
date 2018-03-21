@@ -31,21 +31,22 @@ module "miner" {
   domain           = "${var.domain}"
 }
 
-/* This is a way to run ansible locally for launched hosts.
- * But it's pretty messy because it always shows as
- * requiring a change, which messes with the plan output. */
-#resource null_resource "ansible_miner" {
-#	depends_on = [
-#		"module.miner"
-#	]
-#
-#	provisioner "local-exec" {
-#		command = <<EOF
-#			cd ../ansible &&
-#			ansible-playbook site.yml \
-#				-e env=${var.env} \
-#        -e group_name=${var.miner_params["name"]}
-#    EOF
-#	}
-#}
+/* This is a way to run ansible for launched hosts. */
+resource null_resource "ansible_miner" {
+  depends_on = [
+    "module.miner",
+  ]
 
+  /* Uncomment if you want to run this more than once */
+  triggers {
+    key = "${uuid()}"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+      cd ../ansible &&
+      ansible-playbook site.yml \
+        -e "etherbase=${var.etherbase}" \
+    EOF
+  }
+}

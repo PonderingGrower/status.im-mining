@@ -10,6 +10,10 @@ variable private_key_path {
   description = "Path to the private key used to connect to instance"
 }
 
+variable etherbase {
+  description = "Eth account for receiving mining rewards."
+}
+
 variable env {
   description = "Environment prefix"
   default     = "geth"
