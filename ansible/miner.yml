@@ -1,5 +1,4 @@
 ---
-
 - hosts: aws_tag_Group=geth-miner-cluster
   gather_facts: false
   become: yes
@@ -16,8 +15,41 @@
         state: present
         filename: 'ethereum'
         update_cache: yes
+
   - name: Install geth
     apt:
       name: ethereum
       state: present
 
+  - name: Install supervisor
+    apt:
+      name: supervisor
+      state: present
+
+  - name: Check existence of etherbase variable
+    fail:
+      msg: "Provide address for receiving mining rewards."
+    when: etherbase is not defined
+
+  - name: Check existence of etherbase variable
+    debug:
+      msg: "Mining rewards will be sent to: {{ etherbase }}"
+    when: etherbase is defined
+
+  - name: Create geth supervisor config
+    template:
+      src: templates/geth-miner.conf
+      dest: /etc/supervisor/conf.d/geth-miner.conf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Verify geth miner is running
+    supervisorctl:
+      name: geth-miner
+      state: present
+
+  - name: Verify geth miner is running
+    supervisorctl:
+      name: geth-miner
+      state: started
