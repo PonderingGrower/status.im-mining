@@ -38,9 +38,9 @@ resource null_resource "ansible_miner" {
   ]
 
   /* Uncomment if you want to run this more than once */
-  triggers {
-    key = "${uuid()}"
-  }
+  #triggers {
+  #  key = "${uuid()}"
+  #}
 
   provisioner "local-exec" {
     command = <<EOF
