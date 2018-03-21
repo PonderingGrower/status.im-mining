@@ -23,6 +23,7 @@ module "miner" {
   env              = "${var.env}"
   key_name         = "${module.key_pair.key_name}"
   sg_id            = "${module.base_security.sg_id}"
+  instance_type    = "${var.miner_params["type"]}"
   name             = "${var.miner_params["name"]}"
   count            = "${var.miner_params["count"]}"
   default_tags     = "${var.default_tags}"
@@ -30,6 +31,9 @@ module "miner" {
   domain           = "${var.domain}"
 }
 
+/* This is a way to run ansible locally for launched hosts.
+ * But it's pretty messy because it always shows as
+ * requiring a change, which messes with the plan output. */
 #resource null_resource "ansible_miner" {
 #	depends_on = [
 #		"module.miner"

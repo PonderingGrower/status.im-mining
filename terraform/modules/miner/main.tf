@@ -33,10 +33,10 @@ resource "aws_instance" "miner" {
 resource "aws_route53_record" "miner" {
   zone_id = "${var.zone_id}"
   count   = "${var.count}"
-  name    = "${aws_instance.miner.*.tags.Name[count.index]}.${var.domain}"
+  name    = "${element(aws_instance.miner.*.tags.Name, count.index)}.${var.domain}"
   type    = "A"
   ttl     = "300"
-  records = ["${aws_instance.miner.*.public_ip}"]
+  records = ["${element(aws_instance.miner.*.public_ip, count.index)}"]
 }
 
 resource "aws_security_group" "miner" {

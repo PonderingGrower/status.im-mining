@@ -33,6 +33,7 @@ variable miner_params {
   description = "Paramaters controlling miner instances"
 
   default = {
+    "type"  = "t2.small"
     "name"  = "miner"
     "count" = "1"
   }
