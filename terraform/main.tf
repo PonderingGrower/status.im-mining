@@ -31,10 +31,6 @@ module "miner" {
 }
 
 resource null_resource "ansible_miner" {
-	triggers {
-    key = "${uuid()}"
-  }
-
 	depends_on = [
 		"module.miner"
 	]

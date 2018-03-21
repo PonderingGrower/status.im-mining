@@ -1,5 +1,5 @@
-locales {
-  hostname = "${var.env}-${var.name}-${format("%02d", count.index+1)}"
+locals {
+  host_prefix = "${var.env}-${var.name}"
 }
 
 resource "aws_instance" "miner" {
@@ -14,8 +14,8 @@ resource "aws_instance" "miner" {
   ]
 
   tags = "${merge(var.default_tags, map(
-    "Name",  "${locale.hostname}",
-    "Group", "${var.env}-${var.name}-cluster"
+    "Name",  "${local.host_prefix}-${format("%02d", count.index+1)}",
+    "Group", "${local.host_prefix}-cluster"
   ))}"
 
   provisioner "remote-exec" {
@@ -33,7 +33,7 @@ resource "aws_instance" "miner" {
 resource "aws_route53_record" "miner" {
  	zone_id = "${var.zone_id}"
   count   = "${var.count}"
-  name    = "${locale.hostname}.${var.domain}",
+  name    = "${local.host_prefix}-${format("%02d", count.index+1)}.${var.domain}",
   type    = "A"
   ttl     = "300"
   records = ["${aws_instance.miner.public_ip}"]
