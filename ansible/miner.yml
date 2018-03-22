@@ -1,15 +1,19 @@
 ---
+- name: Install python before running tasks
+  hosts: aws_tag_Group=geth-miner-cluster
+  # need facts for distro release name
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
+
 - name: Geth miner cluster configuration
   hosts: aws_tag_Group=geth-miner-cluster
   # need facts for distro release name
   gather_facts: true
   become: yes
-
-  pre_tasks:
-    - name: Install python for Ansible
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-      changed_when: False
-
   roles:
     - docker
     - monitoring

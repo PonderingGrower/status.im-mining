@@ -10,7 +10,7 @@
     ports:
       # TODO: This is read-only, but it still needs some auth.
       - '0.0.0.0:80:19999'
-      - '127.0.0.1:8125:8125'
+      - '127.0.0.1:8125:8125/udp'
     volumes:
       - '/proc:/host/proc:ro'
       - '/sys:/host/sys:ro'
