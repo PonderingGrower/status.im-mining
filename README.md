@@ -8,6 +8,8 @@ Create `N` geth nodes in AWS that will mine ether in __Ropsten__ and it will be 
 Monitoring can be ad hoc, no need to get deep into visualization/graphs. 
 Document your solution so anyone can scale this up given access to the machine.
 
+__NOTE:__ Only CPU mining is required.
+
 # Usage
 
 In order to create the mining infractructure you will need to provide the required variables.
