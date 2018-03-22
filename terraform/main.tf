@@ -43,10 +43,10 @@ resource null_resource "ansible_miner" {
   #}
 
   provisioner "local-exec" {
-    command = <<EOF
-      cd ../ansible &&
-      ansible-playbook miner.yml \
-        -e "etherbase=${var.etherbase}" \
-    EOF
+    working_dir = "../ansible"
+    command = "ansible-playbook miner.yml -e etherbase=$ETHERBASE"
+    environment {
+      ETHERBASE = "${var.etherbase}"
+    }
   }
 }

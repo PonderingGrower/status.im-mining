@@ -17,7 +17,7 @@ resource "aws_instance" "miner" {
     /* Estimated size based on stackexchange discission:
      * https://ethereum.stackexchange.com/a/826
      * Will probably have to be increased in the future. */
-    volume_size = "20"
+    volume_size = "30"
     volume_type = "gp2"
     delete_on_termination = "true"
   }
@@ -31,8 +31,6 @@ resource "aws_instance" "miner" {
   provisioner "remote-exec" {
     inline = [
       "#Connected!",
-      # if we don't do this ansible will fail on gathering facts
-      "test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)"
     ]
 
     connection {
