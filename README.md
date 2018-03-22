@@ -75,6 +75,11 @@ __NOTE:__ If you wish to run `ansible` separately comment out the `null_resource
 * Mining
     - https://github.com/ethereum/go-ethereum/wiki/Mining
 * Monitoring
+    - https://github.com/firehol/netdata
+    - https://github.com/titpetric/netdata
+* Metrics
+    - https://statsd.readthedocs.io/
+    - https://github.com/firehol/netdata/wiki/statsd
     - https://github.com/ethereum/go-ethereum/wiki/Metrics-and-Monitoring
 
 # Notes
