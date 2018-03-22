@@ -1,0 +1,12 @@
+---
+- name: Check geth syncing progress
+  hosts: aws_tag_Group=geth-miner-cluster
+  # gathering facts will fail without python
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Get syncing info
+      command: "geth attach /home/miner/.ethereum/testnet/geth.ipc --exec=eth.syncing"
+      register: geth
+
+    - debug: msg="{{ geth.stdout_lines[1:-1] }}"
