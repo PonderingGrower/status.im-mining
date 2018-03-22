@@ -79,6 +79,8 @@ __NOTE:__ If you wish to run `ansible` separately comment out the `null_resource
 
 # Notes
 
+## Geth Syncing
+
 Neat function for estimating sync progress:
 ```javascript
 var lastPercentage = 0, lastBlocksToGo = 0, timeInterval = 10000;
@@ -94,4 +96,11 @@ setInterval(function(){
 
     lastPercentage = percentage;lastBlocksToGo = blocksToGo;
 },timeInterval);
+```
+
+## Fetching Geth Metrics
+
+How to get metrics from geth IPC socket:
+```bash
+echo '{"id": 0, "jsonrprc": "2.0", "method": "debug_metrics", "params": [true]}' | nc -U ~/.ethereum/geth.ipc
 ```
