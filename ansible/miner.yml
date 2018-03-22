@@ -1,56 +1,16 @@
 ---
-- hosts: aws_tag_Group=geth-miner-cluster
-  gather_facts: false
+- name: Geth miner cluster configuration
+  hosts: aws_tag_Group=geth-miner-cluster
+  # need facts for distro release name
+  gather_facts: true
   become: yes
 
   pre_tasks:
-  - name: Install python for Ansible
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-    changed_when: False
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
 
-  tasks:
-  - name: Add geth repo
-    apt_repository:
-        repo: 'ppa:ethereum/ethereum'
-        state: present
-        filename: 'ethereum'
-        update_cache: yes
-
-  - name: Install geth
-    apt:
-      name: ethereum
-      state: present
-
-  - name: Install supervisor
-    apt:
-      name: supervisor
-      state: present
-
-  - name: Check existence of etherbase variable
-    fail:
-      msg: "Provide address for receiving mining rewards."
-    when: etherbase is not defined
-
-  - name: Create 'miner' user for geth process
-    user:
-      name: miner
-      shell: /bin/bash
-      append: yes
-
-  - name: Create geth supervisor config
-    template:
-      src: templates/geth-miner.conf
-      dest: /etc/supervisor/conf.d/geth-miner.conf
-      owner: root
-      group: root
-      mode: 0644
-
-  - name: Verify geth miner is running
-    supervisorctl:
-      name: geth-miner
-      state: present
-
-  - name: Verify geth miner is running
-    supervisorctl:
-      name: geth-miner
-      state: started
+  roles:
+    - docker
+    - monitoring
+    - miner

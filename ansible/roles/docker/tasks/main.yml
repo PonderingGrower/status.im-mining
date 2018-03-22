@@ -1,0 +1,31 @@
+---
+- name: Add signing key for docker repo
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+
+- name: Add geth repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable"
+    state: present
+    filename: 'docker'
+    update_cache: yes
+
+- name: Install docker service and python module
+  apt:
+    name: "{{ item }}"
+    # WARNING: this is a hack due to issues with docker-ce
+    allow_unauthenticated: true
+  with_items:
+    - python-docker
+    - docker-ce
+
+- name: Creates /docker directory for mounts
+  file:
+    path: "/docker"
+    state: directory
+
+- name: Give ubuntu user access to docker
+  user:
+    name: ubuntu
+    groups: docker
+    append: true

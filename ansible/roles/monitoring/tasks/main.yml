@@ -1,0 +1,21 @@
+---
+- name: Start netdata container for monitoring
+  docker_container:
+    name: netdata
+    image: titpetric/netdata:latest
+    state: started
+    recreate: true
+    pull: true
+    restart_policy: always
+    ports:
+      # TODO: This is read-only, but it still needs some auth.
+      - '0.0.0.0:80:19999'
+      - '127.0.0.1:8125:8125'
+    volumes:
+      - '/proc:/host/proc:ro'
+      - '/sys:/host/sys:ro'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '/docker/netdata:/etc/netdata'
+    capabilities:
+      - 'SYS_PTRACE'
+
