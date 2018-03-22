@@ -35,7 +35,7 @@
     group: root
     mode: 0644
 
-- name: Verify geth miner is running
+- name: Verify geth miner is present
   supervisorctl:
     name: geth-miner
     state: present

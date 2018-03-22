@@ -16,4 +16,5 @@
   cron:
     name: "geth-metrics"
     minute: "*"
+    user: miner
     job: "/home/miner/geth_metrics.py"
