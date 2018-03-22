@@ -1,0 +1,19 @@
+---
+- name: Install python-statsd
+  apt:
+    name: python-statsd
+    state: present
+
+- name: Add metric collecting script
+  template:
+    src: templates/geth_metrics.py
+    dest: /home/miner/geth_metrics.py
+    owner: root
+    group: root
+    mode: 0775
+
+- name: Configure metrics collecting cron job
+  cron:
+    name: "geth-metrics"
+    minute: "*"
+    job: "/home/miner/geth_metrics.py"

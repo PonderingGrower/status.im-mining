@@ -1,4 +1,12 @@
 ---
+- name: Create netdata configuration
+  template:
+    src: templates/netdata.conf
+    dest: /docker/netdata/netdata.conf
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Start netdata container for monitoring
   docker_container:
     name: netdata
@@ -10,6 +18,7 @@
     ports:
       # TODO: This is read-only, but it still needs some auth.
       - '0.0.0.0:80:19999'
+      # WARNING: requires change in netdata.conf
       - '127.0.0.1:8125:8125/udp'
     volumes:
       - '/proc:/host/proc:ro'
