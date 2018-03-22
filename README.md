@@ -81,6 +81,7 @@ __NOTE:__ If you wish to run `ansible` separately comment out the `null_resource
 
 Neat function for estimating sync progress:
 ```javascript
+var lastPercentage = 0, lastBlocksToGo = 0, timeInterval = 10000;
 setInterval(function(){
     var percentage = eth.syncing.currentBlock/eth.syncing.highestBlock*100;
     var percentagePerTime = percentage - lastPercentage;
