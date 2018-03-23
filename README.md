@@ -23,6 +23,8 @@ private_key_path = "~/.ssh/id_rsa"
 key_name = "miner-admin"
 # domain to which entries for created hosts should be added
 domain = "mydomain.com"
+# prefix for domain before hostnames, ex: miner-01.geth.mydomain.com
+env = "geth"
 # ethereum address for receiving mining rewards
 etherbase = "CHANGE ME PLZ"
 
@@ -35,7 +37,17 @@ miner_params {
 
 Once that exists you can simply go into the `terraform` directory and run `terraform plan` and then `terraform apply` if you like what you see.
 
-# Structure
+To configure miner hosts separately you can run `ansible`:
+```bash
+cd ansible && ansible-playbook miner.yml -e "etherbase=CHANGE_ME"
+```
+
+Same can be done for the __sentry__ host:
+```bash
+cd ansible && ansible-playbook sentry.yml
+```
+
+# Details
 
 The repo is divided into two sections:
 
@@ -43,6 +55,18 @@ The repo is divided into two sections:
 * `ansible` - Contains provisioning for mining instances in AWS.
 
 ## Infrastructure
+
+There are two types of hosts this creates:
+
+* `miners` - Hosts that run `geth` for mining.
+* `sentry` - Hosting Graphite and Grafana for metrics.
+
+The `miners` are mining in Ropsten Proof-of-Work chain using CPU.
+This is inefficient but good enough for a test.
+
+The `sentry` is there to collect metrics and provide a UI for exploring them.
+
+## Provisioning
 
 Using `terraform` 4 types of resources are created:
 
@@ -62,7 +86,29 @@ The main configuration files are:
 
 __NOTE:__ If you wish to run `ansible` separately comment out the `null_resource` section in `terraform/main.tf`.
 
-## Provisioning
+## Configuration
+
+Using `ansible` provisioned hosts are configured for their respective roles using playbooks:
+
+* `ansible/miner.yml` - Configures __miners__ to run `geth` and send metrics.
+* `ansible/sentry.yml` - Configures __sentry__ to run [Graphite](https://graphiteapp.org/) and [Grafana](https://grafana.com/)
+
+A set of roles configures the necessary services:
+
+* `ansible/roles/common` - Installs common utilities like `htop` or `netstat`.
+* `ansible/roles/docker` - Installs [Docker](https://www.docker.com/) to enable use of containers
+* `ansible/roles/miner` - Configures [`go-ethereum`](https://github.com/ethereum/go-ethereum/) client
+* `ansible/roles/monitoring-client` - Configures [netdata](https://my-netdata.io/) for monitoring miners
+* `ansible/roles/monitoring-server` - Configures [Graphite](https://graphiteapp.org/) and [Grafana](https://grafana.com/)
+
+
+
+# TODO
+
+* SSL certificates for web services like Grafana
+* Auth for netdata running on __miners__
+* Backups of Grafana dashboards
+* Backups of `geth` blockchain to reduce sync time
 
 # Resources
 
