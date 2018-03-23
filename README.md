@@ -28,6 +28,11 @@ env = "geth"
 # ethereum address for receiving mining rewards
 etherbase = "CHANGE ME PLZ"
 
+# type of instance used for collecting metrics
+sentry_params {
+  type = "t2.medium"
+}
+
 # number and type of miner instances to start
 miner_params {
   type = "t2.small"
