@@ -15,6 +15,7 @@
   gather_facts: true
   become: yes
   roles:
+    - common
     - docker
-    - monitoring
+    - monitoring-client
     - miner

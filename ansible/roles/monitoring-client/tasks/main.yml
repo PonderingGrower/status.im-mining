@@ -1,4 +1,9 @@
 ---
+- name: Creates /docker/netdata directory
+  file:
+    path: "/docker/netdata"
+    state: directory
+
 - name: Create netdata configuration
   template:
     src: templates/netdata.conf
@@ -27,4 +32,3 @@
       - '/docker/netdata:/etc/netdata'
     capabilities:
       - 'SYS_PTRACE'
-

@@ -1,0 +1,7 @@
+---
+- name: Install common tools
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - htop
+    - net-tools
