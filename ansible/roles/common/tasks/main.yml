@@ -5,3 +5,5 @@
   with_items:
     - htop
     - net-tools
+    - jq
+    - ipython
