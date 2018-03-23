@@ -62,9 +62,10 @@ resource null_resource "ansible_miner" {
 
   provisioner "local-exec" {
     working_dir = "../ansible"
-    command = "ansible-playbook miner.yml -e etherbase=$ETHERBASE"
+    command = "ansible-playbook miner.yml -e etherbase=$ETHERBASE -e monitor_host=$MON_HOST"
     environment {
       ETHERBASE = "${var.etherbase}"
+      MON_HOST = "${module.sentry.public_dns}"
     }
   }
 }
@@ -81,6 +82,9 @@ resource null_resource "ansible_sentry" {
 
   provisioner "local-exec" {
     working_dir = "../ansible"
-    command = "ansible-playbook sentry.yml"
+    command = "ansible-playbook sentry.yml -e monitor_host=$MON_HOST"
+    environment {
+      MON_HOST = "${module.sentry.public_dns}"
+    }
   }
 }

@@ -4,6 +4,11 @@
     path: "/docker/netdata"
     state: directory
 
+- name: Check existence of monitor_host variable
+  fail:
+    msg: "Provide domain monitoring host."
+  when: monitor_host is not defined
+
 - name: Create netdata configuration
   template:
     src: templates/netdata.conf

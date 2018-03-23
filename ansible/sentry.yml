@@ -13,6 +13,9 @@
   hosts: aws_tag_Group=geth-sentry-cluster
   gather_facts: true
   become: yes
+  vars:
+    - domain
+    - env
   roles:
     - common
     - docker

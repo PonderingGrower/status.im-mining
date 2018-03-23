@@ -24,7 +24,7 @@
       # TODO this will need some auth
       - '80:3000'
     env:
-      GF_SERVER_ROOT_URL: http://sentry.get.magi.blue/
+      GF_SERVER_ROOT_URL: http://{{ monitor_host }}/
       # TODO parametrize this
       GF_SECURITY_ADMIN_PASSWORD: status2018
       GF_AUTH_BASIC_ENABLED: false

@@ -39,12 +39,12 @@ Once that exists you can simply go into the `terraform` directory and run `terra
 
 To configure __miner__ hosts separately you can run `ansible`:
 ```bash
-cd ansible && ansible-playbook miner.yml -e "etherbase=CHANGE_ME"
+cd ansible && ansible-playbook miner.yml -e "etherbase=$CHANGE_ME" -e "monitor_host=$HOSTNAME"
 ```
 
 Same can be done for the __sentry__ host:
 ```bash
-cd ansible && ansible-playbook sentry.yml
+cd ansible && ansible-playbook sentry.yml -e "monitor_host=$HOSTNAME"
 ```
 
 # Details
