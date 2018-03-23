@@ -1,5 +1,12 @@
 # Geth Syncing
 
+Basic info can be extracted from JS console:
+```bash
+geth attach /home/miner/.ethereum/testnet/geth.ipc --exec eth.syncing
+```
+
+# Geth Syncing Progress
+
 Neat function for estimating sync progress:
 ```javascript
 var lastPercentage = 0, lastBlocksToGo = 0, timeInterval = 10000;
@@ -22,4 +29,11 @@ setInterval(function(){
 How to get metrics from geth IPC socket:
 ```bash
 echo '{"id": 0, "jsonrprc": "2.0", "method": "debug_metrics", "params": [true]}' | nc -U ~/.ethereum/geth.ipc
+```
+
+# Geth Logs
+
+```
+/var/log/supervisor/geth-miner-stderr.log
+/var/log/supervisor/geth-miner-stdout.log
 ```
