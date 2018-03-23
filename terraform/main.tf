@@ -56,16 +56,16 @@ resource null_resource "ansible_miner" {
   ]
 
   /* uncomment if you want to run this more than once */
-  #triggers {
-  #  key = "${uuid()}"
-  #}
+  triggers {
+    key = "${uuid()}"
+  }
 
   provisioner "local-exec" {
     working_dir = "../ansible"
     command = "ansible-playbook miner.yml -e etherbase=$ETHERBASE -e monitor_host=$MON_HOST"
     environment {
-      ETHERBASE = "${var.etherbase}"
-      MON_HOST = "${module.sentry.public_dns}"
+      ETHERBASE = "${var.etherbase}",
+      MON_HOST = "${module.sentry.public_dns[0]}"
     }
   }
 }
@@ -76,15 +76,15 @@ resource null_resource "ansible_sentry" {
   ]
 
   /* uncomment if you want to run this more than once */
-  #triggers {
-  #  key = "${uuid()}"
-  #}
+  triggers {
+    key = "${uuid()}"
+  }
 
   provisioner "local-exec" {
     working_dir = "../ansible"
     command = "ansible-playbook sentry.yml -e monitor_host=$MON_HOST"
     environment {
-      MON_HOST = "${module.sentry.public_dns}"
+      MON_HOST = "${module.sentry.public_dns[0]}"
     }
   }
 }
