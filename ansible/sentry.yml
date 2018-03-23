@@ -1,0 +1,19 @@
+---
+- name: Install python before running tasks
+  hosts: aws_tag_Group=geth-sentry-cluster
+  # gathering facts will fail without python
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
+
+- name: Graphite and Grafana configuration
+  hosts: aws_tag_Group=geth-sentry-cluster
+  gather_facts: true
+  become: yes
+  roles:
+    - common
+    - docker
+    - monitoring-server

@@ -1,0 +1,8 @@
+---
+# setup netdata monitoring tool
+
+- name: setup graphite storage
+  import_tasks: graphite.yml
+
+- name: setup grafana dashboard
+  import_tasks: grafana.yml

@@ -1,0 +1,39 @@
+---
+- name: Creates /docker/grafana directory
+  file:
+    path: "/docker/grafana/datasources"
+    state: directory
+
+- name: copy over graphite config
+  copy:
+    src: '../templates/graphite.yml'
+    dest: '/docker/grafana/datasources/graphite.yaml'
+    owner: root
+    group: adm
+    mode: 0640
+
+- name: Start grafana container
+  docker_container:
+    name: grafana
+    image: grafana/grafana
+    state: started
+    recreate: true
+    pull: true
+    restart_policy: always
+    ports:
+      # TODO this will need some auth
+      - '80:3000'
+    env:
+      GF_SERVER_ROOT_URL: http://sentry.get.magi.blue/
+      # TODO parametrize this
+      GF_SECURITY_ADMIN_PASSWORD: status2018
+      GF_AUTH_BASIC_ENABLED: false
+      GF_AUTH_PROXY_ENABLED: true
+      GF_AUTH_PROXY_HEADER_NAME: X-Webauth-User
+      GF_AUTH_PROXY_HEADER_PROPERTY: username
+      GF_AUTH_PROXY_AUTO_SIGN_UP: true
+    volumes:
+      - '/docker/grafana:/var/lib/grafana'
+      - '/docker/grafana/datasources:/etc/grafana/provisioning/datasources'
+    links:
+      - 'graphite:graphite'

@@ -1,0 +1,46 @@
+---
+- name: Creates /docker/graphite directory
+  file:
+    path: "/docker/graphite"
+    state: directory
+
+- name: Copy over graphite config
+  copy:
+    src: '../templates/{{ item }}'
+    dest: '/docker/graphite/{{ item }}'
+    owner: root
+    group: adm
+  with_items:
+    - carbon.conf
+    - storage-schemas.conf
+
+- name: Install python-passlib required for .htpasswd
+  apt:
+    name: python-passlib
+
+- name: Set admin password for graphite in .htpasswd
+  htpasswd:
+    path: "/docker/graphite/.htpasswd"
+    name: admin
+    # TODO parametrize
+    password: status2018
+    owner: root
+    group: www-data
+    mode: 0640
+
+- name: Start graphite container
+  docker_container:
+    name: graphite
+    image: sitespeedio/graphite
+    state: started
+    recreate: true
+    pull: true
+    restart_policy: always
+    ports:
+      - '127.0.0.1:8080:80'   # management
+      - '2003:2003' # metrics
+    volumes:
+      - '/docker/graphite/.htpasswd:/etc/nginx/.htpasswd'
+      - '/docker/graphite/carbon.conf:/opt/graphite/conf/carbon.conf'
+      - '/docker/graphite/storage-schemas.conf:/opt/graphite/conf/storage-schemas.conf'
+      - '/docker/graphite/whisper:/opt/graphite/storage/whisper'
