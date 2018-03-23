@@ -31,13 +31,31 @@ module "miner" {
   domain           = "${var.domain}"
 }
 
+module "sentry" {
+  ami              = "${data.aws_ami.image.id}"
+  source           = "modules/sentry"
+  pub_key_path     = "${var.pub_key_path}"
+  ssh_user         = "${var.ssh_user}"
+  private_key_path = "${var.private_key_path}"
+  env              = "${var.env}"
+  key_name         = "${module.key_pair.key_name}"
+  sg_id            = "${module.base_security.sg_id}"
+  instance_type    = "${var.sentry_params["type"]}"
+  name             = "${var.sentry_params["name"]}"
+  default_tags     = "${var.default_tags}"
+  zone_id          = "${data.aws_route53_zone.selected.zone_id}"
+  domain           = "${var.domain}"
+  # necessary to allow access to graphite
+  miner_sec_group  = "${module.miner.sec_group_id}"
+}
+
 /* This is a way to run ansible for launched hosts. */
 resource null_resource "ansible_miner" {
   depends_on = [
     "module.miner",
   ]
 
-  /* Uncomment if you want to run this more than once */
+  /* uncomment if you want to run this more than once */
   #triggers {
   #  key = "${uuid()}"
   #}
@@ -48,5 +66,21 @@ resource null_resource "ansible_miner" {
     environment {
       ETHERBASE = "${var.etherbase}"
     }
+  }
+}
+
+resource null_resource "ansible_sentry" {
+  depends_on = [
+    "module.sentry",
+  ]
+
+  /* uncomment if you want to run this more than once */
+  #triggers {
+  #  key = "${uuid()}"
+  #}
+
+  provisioner "local-exec" {
+    working_dir = "../ansible"
+    command = "ansible-playbook sentry.yml"
   }
 }

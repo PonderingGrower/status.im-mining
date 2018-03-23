@@ -37,6 +37,15 @@ variable region {
   default     = "eu-west-1"
 }
 
+variable sentry_params {
+  description = "Paramaters controlling monitoring instances"
+
+  default = {
+    "type"  = "t2.small"
+    "name"  = "sentry"
+  }
+}
+
 variable miner_params {
   description = "Paramaters controlling miner instances"
 

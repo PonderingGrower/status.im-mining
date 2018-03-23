@@ -9,3 +9,7 @@ output "public_dns" {
 output "id_list" {
   value = ["${aws_instance.miner.*.id}"]
 }
+
+output "sec_group_id" {
+  value = "${aws_security_group.miner.id}"
+}

@@ -1,25 +1,21 @@
-resource "aws_instance" "miner" {
+resource "aws_instance" "sentry" {
   ami           = "${var.ami}"
-  count         = "${var.count}"
   instance_type = "${var.instance_type}"
   key_name      = "${var.key_name}"
 
   vpc_security_group_ids = [
     "${var.sg_id}",
-    "${aws_security_group.miner.id}",
+    "${aws_security_group.sentry.id}",
   ]
 
   root_block_device {
-    /* Estimated size based on stackexchange discission:
-     * https://ethereum.stackexchange.com/a/826
-     * Will probably have to be increased in the future. */
-    volume_size = "30"
+    volume_size = "40"
     volume_type = "gp2"
     delete_on_termination = "true"
   }
 
   tags = "${merge(var.default_tags, map(
-    "Name",  "${var.name}-${format("%02d", count.index+1)}",
+    "Name",  "${var.name}",
     "Group", "${var.env}-${var.name}-cluster"
   ))}"
 
@@ -38,30 +34,36 @@ resource "aws_instance" "miner" {
   }
 }
 
-resource "aws_route53_record" "miner" {
+resource "aws_route53_record" "sentry" {
   zone_id = "${var.zone_id}"
-  count   = "${var.count}"
-  name    = "${element(aws_instance.miner.*.tags.Name, count.index)}.${var.env}.${var.domain}"
+  name    = "${aws_instance.sentry.tags.Name}.${var.env}.${var.domain}"
   type    = "A"
   ttl     = "300"
-  records = ["${element(aws_instance.miner.*.public_ip, count.index)}"]
+  records = ["${aws_instance.sentry.public_ip}"]
 }
 
-resource "aws_security_group" "miner" {
-  name        = "${var.env}-miner-sg"
-  description = "Allow Ethereum node access"
+resource "aws_security_group" "sentry" {
+  name        = "${var.env}-sentry-sg"
+  description = "Allow Graphite backend access for netdata"
 
   ingress {
+    from_port       = 0
+    to_port         = 2003
+    protocol        = "tcp"
+    security_groups = ["${var.miner_sec_group}"]
+  }
+  # Grafana access
+  ingress {
     from_port   = 0
-    to_port     = 30303
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
+  # Graphite access
   ingress {
     from_port   = 0
-    to_port     = 30303
-    protocol    = "udp"
+    to_port     = 8080
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
