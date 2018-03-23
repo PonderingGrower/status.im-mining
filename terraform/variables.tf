@@ -20,12 +20,11 @@ variable domain {
   description = "DNS Domain to update"
 }
 
-/* OPTIONAL -------------------------------------*/
-
 variable env {
   description = "Environment prefix"
-  default     = "geth"
 }
+
+/* OPTIONAL -------------------------------------*/
 
 variable ssh_user {
   description = "User used to log in to instance"
