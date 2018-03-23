@@ -37,7 +37,7 @@
     pull: true
     restart_policy: always
     ports:
-      - '127.0.0.1:8080:80'   # management
+      - '8080:80'   # management
       - '2003:2003' # metrics
     volumes:
       - '/docker/graphite/.htpasswd:/etc/nginx/.htpasswd'

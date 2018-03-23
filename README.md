@@ -37,7 +37,7 @@ miner_params {
 
 Once that exists you can simply go into the `terraform` directory and run `terraform plan` and then `terraform apply` if you like what you see.
 
-To configure miner hosts separately you can run `ansible`:
+To configure __miner__ hosts separately you can run `ansible`:
 ```bash
 cd ansible && ansible-playbook miner.yml -e "etherbase=CHANGE_ME"
 ```
@@ -61,10 +61,10 @@ There are two types of hosts this creates:
 * `miners` - Hosts that run `geth` for mining.
 * `sentry` - Hosting Graphite and Grafana for metrics.
 
-The `miners` are mining in Ropsten Proof-of-Work chain using CPU.
+The __miners__ are mining in Ropsten Proof-of-Work chain using CPU.
 This is inefficient but good enough for a test.
 
-The `sentry` is there to collect metrics and provide a UI for exploring them.
+The __sentry__ is there to collect metrics and provide a UI for exploring them.
 
 ## Provisioning
 
@@ -109,6 +109,7 @@ A set of roles configures the necessary services:
 * Auth for netdata running on __miners__
 * Backups of Grafana dashboards
 * Backups of `geth` blockchain to reduce sync time
+* Find why metrics not starting with `eth` don't get saved in graphite
 
 # Resources
 
@@ -127,31 +128,3 @@ A set of roles configures the necessary services:
     - https://statsd.readthedocs.io/
     - https://github.com/firehol/netdata/wiki/statsd
     - https://github.com/ethereum/go-ethereum/wiki/Metrics-and-Monitoring
-
-# Notes
-
-## Geth Syncing
-
-Neat function for estimating sync progress:
-```javascript
-var lastPercentage = 0, lastBlocksToGo = 0, timeInterval = 10000;
-setInterval(function(){
-    var percentage = eth.syncing.currentBlock/eth.syncing.highestBlock*100;
-    var percentagePerTime = percentage - lastPercentage;
-    var blocksToGo = eth.syncing.highestBlock - eth.syncing.currentBlock;
-    var bps = (lastBlocksToGo - blocksToGo) / (timeInterval / 1000)
-    var etas = 100 / percentagePerTime * (timeInterval / 1000)
-
-    var etaM = parseInt(etas/60,10);
-    console.log(parseInt(percentage,10)+'% ETA: '+etaM+' minutes @ '+bps+'bps');
-
-    lastPercentage = percentage;lastBlocksToGo = blocksToGo;
-},timeInterval);
-```
-
-## Fetching Geth Metrics
-
-How to get metrics from geth IPC socket:
-```bash
-echo '{"id": 0, "jsonrprc": "2.0", "method": "debug_metrics", "params": [true]}' | nc -U ~/.ethereum/geth.ipc
-```
