@@ -1,7 +1,7 @@
 output "public_dns" {
   value = [
-    "${module.miner.public_dns}"
-    "${module.sentry.public_dns}",
+    "${module.miner.public_dns}",
+    "${module.sentry.public_dns}"
   ]
 }
 
